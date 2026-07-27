@@ -27,23 +27,19 @@ graph TD
 
 ### 🧠 [1. Neural Network from Scratch](projects/1_neural_network_scratch/)
 * **Focus**: Backpropagation, Vectorization, NumPy-only.
-* **Overview**: A Multi-Layer Perceptron (MLP) built completely from scratch using Python and NumPy. Features full gradient descent, forward and backward propagation, custom activation functions (Sigmoid, ReLU, Softmax), and is trained on the MNIST handwritten digits dataset.
-* **Recruiter Takeaway**: Demonstrates deep mathematical understanding of neural network mechanics, matrix calculus, and numerical stability without relying on modern deep learning frameworks.
+* **Overview**: A Multi-Layer Perceptron (MLP) built completely from scratch using Python and NumPy — no PyTorch, no TensorFlow. Implements full forward/backward propagation, custom activation functions (Sigmoid, ReLU, Softmax), and trains on the MNIST handwritten digits dataset. All gradients are derived and coded by hand.
 
 ### 🔄 [2. Sequence Modeling with RNN & LSTM](projects/2_rnn_lstm_generator/)
 * **Focus**: Sequence modeling, Hidden States, Recurrence, PyTorch.
-* **Overview**: A character-level language model trained to generate text. It includes a custom-built RNN and LSTM layer implementation in PyTorch to compare how gate mechanisms solve the vanishing gradient problem in sequential memory tasks.
-* **Recruiter Takeaway**: Demonstrates sequence processing proficiency, tokenization, temperature-scaled sampling, and hidden state management.
+* **Overview**: A character-level language model that trains on text and generates new sequences. Implements both a standard RNN and an LSTM in PyTorch so you can directly compare how gating mechanisms fix the vanishing gradient problem. Includes temperature-scaled sampling for controlling output creativity.
 
 ### ⚡ [3. Decoder-Only Transformer from Scratch](projects/3_transformer_scratch/)
 * **Focus**: Self-Attention, Multi-Head Attention, PyTorch.
-* **Overview**: A custom implementation of a generative, decoder-only Transformer (mini-GPT) model built block-by-block. Features multi-head causal attention, learned positional encodings, layer normalization, residual connections, and generative text sampling (top-k, temperature).
-* **Recruiter Takeaway**: Shows mastery of state-of-the-art architectures, causal attention masking, dimension matching, and training of large-scale modern architectures.
+* **Overview**: A mini-GPT built block-by-block in PyTorch. Implements multi-head causal self-attention, learned positional encodings, Pre-LN layer normalization, and residual connections. Trained on Shakespeare text and generates new sequences using top-k + temperature sampling.
 
 ### 🤖 [4. RAG AI Agent](projects/4_rag_agent/)
 * **Focus**: Retrieval-Augmented Generation, Vector DBs, Agents, LLM Integration.
-* **Overview**: A production-style Retrieval-Augmented Generation (RAG) agent that parses data, stores semantic representations in a local vector base, retrieves context, and formats prompt routing to produce verified, grounded answers.
-* **Recruiter Takeaway**: Proves capability to build real-world AI applications, integrate external APIs, perform vector embedding operations, and construct robust agentic logical flow.
+* **Overview**: A production-style RAG agent that indexes documents into a custom TF-IDF vector database (built from scratch in NumPy), retrieves relevant context for a query, and routes the prompt to either a local fallback engine or the Gemini API for generation. Designed to return grounded, fact-verified answers.
 
 ---
 
