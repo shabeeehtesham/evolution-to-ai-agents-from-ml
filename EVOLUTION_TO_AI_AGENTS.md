@@ -48,7 +48,7 @@ python projects/1_neural_network_scratch/neural_network_scratch.py --test-run
 ```
 
 ### 2. Full Training Mode
-Runs a training loop on the MNIST handwritten digits dataset (if `torchvision` is installed) or a generated spiral dataset:
+Runs a training loop on a slice of the Shakespeare corpus ([data/shakespeare.txt](data/shakespeare.txt)), learning to predict the next character of the text from a fixed 10-character window:
 ```bash
 python projects/1_neural_network_scratch/neural_network_scratch.py
 ```
@@ -57,7 +57,7 @@ python projects/1_neural_network_scratch/neural_network_scratch.py
 When the script executes, the following loop occurs for each batch of data:
 
 1. **Parameter Initialization:**
-   * Weights ($\mathbf{W}$) are initialized using He/Xavier-like scaling to prevent vanishing/exploding activations. Biases ($\mathbf{b}$) are set to zero.
+   * Weights ($\mathbf{W}$) are initialized as small random values (scaled by 0.01) to keep activations small at the start of training. Biases ($\mathbf{b}$) are set to zero.
 2. **Forward Pass:**
    * **Dense Layer 1:** Inputs are projected: $\mathbf{Z_1} = \mathbf{X}\mathbf{W_1} + \mathbf{b_1}$.
    * **ReLU Activation:** Applies element-wise non-linearity: $\mathbf{A_1} = \max(0, \mathbf{Z_1})$.

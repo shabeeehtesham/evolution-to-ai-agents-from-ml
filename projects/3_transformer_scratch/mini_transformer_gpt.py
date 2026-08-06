@@ -1,9 +1,9 @@
 # =====================================================================
 # Project 3: Decoder-Only Mini-GPT Transformer from Scratch
-# Author: Shabih Ehtesham
+# Author: Shabee Ibn Ehtesham
 #
 # A block-by-block implementation of a generative Transformer language model
-# using PyTorch. Implements causal multi-head self-attention, positional 
+# using PyTorch. Implements causal multi-head self-attention, positional
 # encodings, feedforward expansions, and autoregressive text generation.
 # =====================================================================
 
@@ -13,6 +13,9 @@ import torch.nn.functional as F
 import numpy as np
 import argparse
 import sys
+import os
+import json
+import time
 
 # =====================================================================
 # 1. Transformer Core Components
@@ -20,65 +23,69 @@ import sys
 
 class CausalSelfAttention(nn.Module):
     """
-    Standard scaled dot-product attention module with causal masking.
-    Allows tokens to attend only to past positions, enabling autoregressive generation.
+    Causal Self-Attention Layer.
+    - Self-Attention: Allows tokens (words) to look at all other tokens in the sentence
+      and decide which ones are most relevant (e.g., matching 'it' to 'dog').
+    - Causal: Prevents tokens from looking into the future. Each token can only look
+      at itself and words that came before it.
     """
     def __init__(self, n_embed, n_head, block_size):
         super().__init__()
         assert n_embed % n_head == 0, "Embedding size must be divisible by head count"
-        
-        # Key, Query, Value projections in a single batch matrix multiplication
+
+        # We calculate Queries (Q), Keys (K), and Values (V) together in one big linear layer for speed
         self.c_attn = nn.Linear(n_embed, 3 * n_embed)
-        # Output projection
+        # Output projection layer to mix head results back together
         self.c_proj = nn.Linear(n_embed, n_embed)
-        
+
         self.n_head = n_head
         self.n_embed = n_embed
-        
-        # Causal mask register (not a parameter, registered as buffer)
-        # Lower triangular matrix of ones
+
+        # Causal mask: a lower-triangular matrix of ones
+        # This acts like a folder partition preventing the model from looking ahead
         self.register_buffer("bias", torch.tril(torch.ones(block_size, block_size))
                                         .view(1, 1, block_size, block_size))
 
     def forward(self, x):
-        B, T, C = x.size() # Batch size, Sequence length, Embedding channels (n_embed)
-        
-        # 1. Project to Q, K, V
+        B, T, C = x.size() # Batch size, Sequence length, Embedding channels
+
+        # 1. Project input to Q, K, and V
         q, k, v = self.c_attn(x).split(self.n_embed, dim=2)
-        
-        # 2. Reshape to split heads: (B, T, nh, hs) -> transpose to (B, nh, T, hs)
-        # nh = number of heads, hs = head size (C / nh)
-        k = k.view(B, T, self.n_head, C // self.n_head).transpose(1, 2)
+
+        # 2. Split into multiple heads. This lets the network focus on different relationships
+        # (e.g., one head checks grammar, another checks pronouns, another checks verbs).
+        k = k.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, n_head, T, head_size)
         q = q.view(B, T, self.n_head, C // self.n_head).transpose(1, 2)
         v = v.view(B, T, self.n_head, C // self.n_head).transpose(1, 2)
-        
-        # 3. Calculate Scaled Dot-Product Attention: (B, nh, T, hs) x (B, nh, hs, T) -> (B, nh, T, T)
+
+        # 3. Calculate alignment scores: (Query x Key) / sqrt(head_size)
         att = (q @ k.transpose(-2, -1)) * (1.0 / np.sqrt(k.size(-1)))
-        
-        # Apply causal masking (fill future tokens with -inf before softmax)
+
+        # Apply causal masking: fill future tokens with -inf so their softmax probability is 0
         att = att.masked_fill(self.bias[:, :, :T, :T] == 0, float('-inf'))
-        
-        # Apply softmax to calculate weight scores
+
+        # Calculate final softmax weight probabilities (attention map)
         att = F.softmax(att, dim=-1)
-        
-        # 4. Weighted sum of values: (B, nh, T, T) x (B, nh, T, hs) -> (B, nh, T, hs)
+
+        # 4. Use weights to average the values (Value)
         y = att @ v
-        
-        # Re-assemble all heads back to single vector space: (B, nh, T, hs) -> (B, T, C)
+
+        # Concatenate all heads back into a single vector representation
         y = y.transpose(1, 2).contiguous().view(B, T, C)
-        
-        # Output projection
+
+        # Final output projection
         return self.c_proj(y)
 
 
 class FeedForward(nn.Module):
     """
-    A simple linear layer followed by a non-linearity (GELU) and output projection.
-    Applied position-wise across the sequence.
+    A simple multilayer perceptron applied position-wise across the sequence.
+    Think of this as a brain block where each token digests the information it gathered
+    during the attention step and thinks about it individually.
     """
     def __init__(self, n_embed):
         super().__init__()
-        # Feed-forward expansion factor of 4 (standard GPT architecture)
+        # Standard GPT expansion: project up by a factor of 4, apply GELU, project back down
         self.net = nn.Sequential(
             nn.Linear(n_embed, 4 * n_embed),
             nn.GELU(),
@@ -91,19 +98,19 @@ class FeedForward(nn.Module):
 
 class Block(nn.Module):
     """
-    A single Transformer Block (Layer).
-    Combines Layer Normalization, Causal Self-Attention, FeedForward, and Residual Connections.
+    A single Transformer Block.
+    Combines Causal Self-Attention, FeedForward, Layer Normalization, and Residual Connections.
     """
     def __init__(self, n_embed, n_head, block_size):
         super().__init__()
-        # Pre-LN design (Layer Normalization applied before blocks)
+        # Pre-LN design: normalize the values BEFORE passing them into attention or feedforward
         self.ln_1 = nn.LayerNorm(n_embed)
         self.attn = CausalSelfAttention(n_embed, n_head, block_size)
         self.ln_2 = nn.LayerNorm(n_embed)
         self.ffwd = FeedForward(n_embed)
 
     def forward(self, x):
-        # x + residual connection
+        # x + block(x) creates a residual 'highway' where gradients can flow backward easily
         x = x + self.attn(self.ln_1(x))
         x = x + self.ffwd(self.ln_2(x))
         return x
@@ -117,22 +124,21 @@ class MiniTransformerGPT(nn.Module):
     def __init__(self, vocab_size, n_embed=128, n_head=4, n_layer=3, block_size=64):
         super().__init__()
         self.block_size = block_size
-        
-        # Token Embeddings table
+
         self.transformer = nn.ModuleDict(dict(
-            wte = nn.Embedding(vocab_size, n_embed),
-            wpe = nn.Embedding(block_size, n_embed),
-            h = nn.ModuleList([Block(n_embed, n_head, block_size) for _ in range(n_layer)]),
-            ln_f = nn.LayerNorm(n_embed)
+            wte = nn.Embedding(vocab_size, n_embed), # Word Token Embeddings (meaning of words)
+            wpe = nn.Embedding(block_size, n_embed), # Word Position Embeddings (where words are in sentence)
+            h = nn.ModuleList([Block(n_embed, n_head, block_size) for _ in range(n_layer)]), # Stacked Blocks
+            ln_f = nn.LayerNorm(n_embed) # Final normalization
         ))
-        
-        # Language Model projection head
+
+        # Projects output representation back to vocabulary logits (word prediction scores)
         self.lm_head = nn.Linear(n_embed, vocab_size)
 
-        # Initialize weights
         self.apply(self._init_weights)
 
     def _init_weights(self, module):
+        # Initialize weights with standard normal distribution for stability
         if isinstance(module, nn.Linear):
             torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
             if module.bias is not None:
@@ -143,64 +149,68 @@ class MiniTransformerGPT(nn.Module):
     def forward(self, idx, targets=None):
         device = idx.device
         b, t = idx.size()
-        
+
         assert t <= self.block_size, f"Sequence length {t} exceeds maximum block size {self.block_size}"
-        
-        # Generate position indices: [0, 1, 2, ..., t-1]
+
+        # Create position indices: [0, 1, 2, ..., t-1]
         pos = torch.arange(0, t, dtype=torch.long, device=device).unsqueeze(0) # (1, t)
-        
-        # Look up embedding representations
-        tok_emb = self.transformer.wte(idx) # token embeddings of shape (b, t, n_embed)
-        pos_emb = self.transformer.wpe(pos) # position embeddings of shape (1, t, n_embed)
-        
-        # Sum token and position representations
+
+        # Word representations + Position representations (helps model know which word came first)
+        tok_emb = self.transformer.wte(idx) # (b, t, n_embed)
+        pos_emb = self.transformer.wpe(pos) # (1, t, n_embed)
         x = tok_emb + pos_emb
-        
-        # Run through stacked Transformer blocks
+
+        # Pass through stacked Transformer Blocks
         for block in self.transformer.h:
             x = block(x)
-            
+
         x = self.transformer.ln_f(x)
-        
-        # Project hidden states to vocabulary space
         logits = self.lm_head(x) # (b, t, vocab_size)
-        
+
         loss = None
         if targets is not None:
-            # Flatten predictions and targets to feed PyTorch CrossEntropyLoss
+            # Flatten predictions and targets to calculate loss
             loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1))
-            
+
         return logits, loss
 
     @torch.no_grad()
-    def generate(self, idx, max_new_tokens, temperature=1.0, top_k=None):
+    def generate(self, idx, max_new_tokens, temperature=1.0, top_k=None, stop_tokens=None):
         """
-        Generates text autoregressively.
+        Generates text autoregressively (one token at a time). If `stop_tokens`
+        (a set of token ids) is given and we're generating a single sequence
+        (batch size 1), generation stops as soon as one of them is produced —
+        used to end at sentence-ending punctuation instead of always running
+        for max_new_tokens. Batched (B>1) early-stopping would need
+        per-sequence masking/padding, which is deliberately out of scope here
+        since generation is only ever called one sequence at a time.
         """
         for _ in range(max_new_tokens):
-            # Crop index context if it exceeds the maximum block size
+            # Crop context if it exceeds maximum block size
             idx_cond = idx if idx.size(1) <= self.block_size else idx[:, -self.block_size:]
-            
-            # Predict logits
+
+            # Predict scores
             logits, _ = self(idx_cond)
-            
-            # Focus on prediction at the last time step
-            logits = logits[:, -1, :] / max(temperature, 1e-6) # shape (b, vocab_size)
-            
-            # Apply top-k filtering if specified
+
+            # Scale scores at the final timestep with temperature
+            logits = logits[:, -1, :] / max(temperature, 1e-6)
+
+            # Top-k filtering: ignore any tokens outside the top k most probable options
             if top_k is not None:
                 v, _ = torch.topk(logits, min(top_k, logits.size(-1)))
                 logits[logits < v[:, [-1]]] = -float('Inf')
-                
-            # Apply softmax to calculate probabilities
+
             probs = F.softmax(logits, dim=-1)
-            
-            # Sample next token index from probabilities distribution
+
+            # Sample next token index from probabilities
             idx_next = torch.multinomial(probs, num_samples=1)
-            
-            # Append next token index to current sequence
+
+            # Append predicted token index to output sequence
             idx = torch.cat((idx, idx_next), dim=1)
-            
+
+            if stop_tokens is not None and idx.size(0) == 1 and idx_next.item() in stop_tokens:
+                break
+
         return idx
 
 
@@ -209,149 +219,246 @@ class MiniTransformerGPT(nn.Module):
 # =====================================================================
 
 class CharDataset:
+    """
+    Splits a character corpus into input/target index sequences.
+    """
     def __init__(self, data_str, block_size):
         self.block_size = block_size
         self.chars = sorted(list(set(data_str)))
         self.vocab_size = len(self.chars)
-        
+
         self.char2idx = {ch: i for i, ch in enumerate(self.chars)}
         self.idx2char = {i: ch for i, ch in enumerate(self.chars)}
-        
+
         self.data = torch.tensor([self.char2idx[c] for c in data_str], dtype=torch.long)
 
     def get_batch(self, batch_size):
-        # Pick random starting offsets
+        # Pick random starting offsets inside our corpus
         ix = torch.randint(len(self.data) - self.block_size, (batch_size,))
         x = torch.stack([self.data[i:i+self.block_size] for i in ix])
-        # Target sequence is shifted by 1 index
+        # Target sequence is shifted forward by 1 index (predict next character)
         y = torch.stack([self.data[i+1:i+self.block_size+1] for i in ix])
         return x, y
 
 
 # =====================================================================
-# 4. Training Pipeline
+# 4. Training Pipeline & Text Generation Helpers
 # =====================================================================
+
+STOP_CHARS = {'.', '!', '?'}
+
+
+def generate_sentence(model, dataset, device, temperature=0.7, top_k=10, max_new_tokens=200):
+    """
+    Generates one text continuation: primes on a newline and samples until the
+    model produces sentence-ending punctuation (or hits the safety length cap).
+    """
+    model.eval()
+    stop_tokens = {dataset.char2idx[c] for c in STOP_CHARS if c in dataset.char2idx}
+    context = torch.tensor([[dataset.char2idx['\n']]], dtype=torch.long, device=device)
+    gen_ids = model.generate(
+        context, max_new_tokens=max_new_tokens, temperature=temperature, top_k=top_k,
+        stop_tokens=stop_tokens
+    )[0].tolist()
+    text = "".join([dataset.idx2char[idx] for idx in gen_ids])
+    return text.strip("\n")
+
+
+def generate_sentences(model, dataset, device, num_sentences=5, temperature=0.7, top_k=10):
+    samples = []
+    attempts = 0
+    while len(samples) < num_sentences and attempts < num_sentences * 5:
+        attempts += 1
+        sample = generate_sentence(model, dataset, device, temperature=temperature, top_k=top_k)
+        if sample:
+            samples.append(sample)
+    return samples
+
 
 def train_transformer(model, dataset, device, max_iters=2000, batch_size=32, lr=3e-4):
     optimizer = torch.optim.AdamW(model.parameters(), lr=lr)
-    
+
     print(f"Training Mini-GPT Transformer on device: {device}...")
     model.train()
-    
+
+    last_loss = 0.0
     for i in range(1, max_iters + 1):
-        # Get random training batch
+        # Fetch a random batch of sequences
         xb, yb = dataset.get_batch(batch_size)
         xb, yb = xb.to(device), yb.to(device)
-        
-        # Forward pass & loss evaluation
+
+        # Calculate predictions and loss
         logits, loss = model(xb, yb)
-        
-        # Optimization
+
+        # Backpropagate and adjust weights
         optimizer.zero_grad(set_to_none=True)
         loss.backward()
         optimizer.step()
-        
-        # Log evaluation metrics periodically
+        last_loss = loss.item()
+
         if i == 1 or i % 250 == 0 or i == max_iters:
-            print(f"Iteration {i}/{max_iters} | Loss: {loss.item():.4f}")
-            
-            # Print sample generation
-            model.eval()
-            context = torch.zeros((1, 1), dtype=torch.long, device=device) # starting with null token (usually index 0)
-            generated_ids = model.generate(context, max_new_tokens=40, temperature=0.7, top_k=5)[0].tolist()
-            sample_str = "".join([dataset.idx2char[idx] for idx in generated_ids])
-            print(f"  Generated Sample: {repr(sample_str)}")
+            print(f"Iteration {i}/{max_iters} | Loss: {last_loss:.4f}")
+
+            # Print a sample generated continuation to show progress
+            sample = generate_sentence(model, dataset, device, temperature=0.7, top_k=5)
+            print(f"  Generated Sample: {repr(sample)}")
             model.train()
 
-    return model
+    return model, last_loss
 
 
 # =====================================================================
-# 5. CLI Execution
+# 5. Corpus Loading & CLI Execution
 # =====================================================================
 
-TINY_CORPUS = """
-JULIET:
-O Romeo, Romeo! wherefore art thou Romeo?
-Deny thy father and refuse thy name;
-Or, if thou wilt not, be but sworn my love,
-And I'll no longer be a Capulet.
+# Small embedded fallback so --test-run (and any run without data/shakespeare.txt
+# present) stays instant and fully offline. Real verbatim excerpt of the fetched
+# corpus (the opening Citizens' scene), not synthetic text - kept identical to
+# Projects 1 & 2's excerpt so all three share the same fallback universe.
+FALLBACK_TEXT = (
+    "First Citizen:\nBefore we proceed any further, hear me speak.\n\n"
+    "All:\nSpeak, speak.\n\n"
+    "First Citizen:\nYou are all resolved rather to die than to famish?\n\n"
+    "All:\nResolved. resolved.\n\n"
+    "First Citizen:\nFirst, you know Caius Marcius is chief enemy to the people.\n\n"
+    "All:\nWe know't, we know't.\n\n"
+    "First Citizen:\nLet us kill him, and we'll have corn at our own price.\n"
+    "Is't a verdict?\n\n"
+    "All:\nNo more talking on't; let it be done: away, away!\n\n"
+    "Second Citizen:\nOne word, good citizens.\n\n"
+    "First Citizen:\nWe are accounted poor citizens, the patricians good.\n"
+    "What authority surfeits on would relieve us: if they\n"
+    "would yield us but the superfluity, while it were\n"
+    "wholesome, we might guess they relieved us humanely;\n"
+    "but they think we are too dear: the leanness that\n"
+    "afflicts us, the object of our misery, is as an\n"
+    "inventory to particularise their abundance; our\n"
+    "sufferance is a gain to them Let us revenge this with\n"
+    "our pikes, ere we become rakes: for the gods know I\n"
+    "speak this in hunger for bread, not in thirst for revenge.\n\n"
+    "Second Citizen:\nWould you proceed especially against Caius Marcius?\n\n"
+    "All:\nAgainst him first: he's a very dog to the commonalty.\n\n"
+    "Second Citizen:\nConsider you what services he has done for his country?\n\n"
+    "First Citizen:\nVery well; and could be content to give him good\n"
+    "report fort, but that he pays himself with being proud.\n\n"
+    "Second Citizen:\nNay, but speak not maliciously.\n\n"
+    "First Citizen:\nI say unto you, what he hath done famously, he did\n"
+    "it to that end: though soft-conscienced men can be\n"
+    "content to say it was for his country he did it to\n"
+    "please his mother and to be partly proud; which he\n"
+    "is, even till the altitude of his virtue.\n\n"
+    "Second Citizen:\nWhat he cannot help in his nature, you account a\n"
+    "vice in him. You must in no way say he is covetous."
+)
 
-ROMEO:
-Shall I hear more, or shall I speak at this?
+DEMO_CORPUS_CHARS = 80_000
 
-JULIET:
-'Tis but thy name that is my enemy;
-Thou art thyself, though not a Montague.
-What's Montague? it is nor hand, nor foot,
-Nor arm, nor face, nor any other part
-Belonging to a man. O, be some other name!
-What's in a name? that which we call a rose
-By any other name would smell as sweet;
-So Romeo would, were he not Romeo call'd,
-Retain that dear perfection which he owes
-Without that title. Romeo, doff thy name,
-And for that name which is no part of thee
-Take all myself.
-"""
+
+def load_corpus(script_file):
+    """
+    Loads the shared Shakespeare corpus (see data/shakespeare.txt at the repo
+    root). Falls back to a small embedded excerpt if the file isn't available.
+    """
+    candidates = []
+    env_path = os.environ.get("CORPUS_DATASET_PATH")
+    if env_path:
+        candidates.append(env_path)
+    here = os.path.dirname(os.path.abspath(script_file))
+    candidates.append(os.path.join(here, "..", "..", "data", "shakespeare.txt"))
+    candidates.append(os.path.join(os.getcwd(), "data", "shakespeare.txt"))
+
+    for path in candidates:
+        if path and os.path.isfile(path):
+            with open(path, encoding="utf-8") as f:
+                text = f.read()
+            if text:
+                print(f"[OK] Loaded {len(text)} characters from {path}")
+                return text
+
+    print("[INFO] data/shakespeare.txt not found. Falling back to a small embedded excerpt.")
+    return FALLBACK_TEXT
+
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Autoregressive Decoder-only Transformer built from scratch.")
-    parser.add_argument("--test-run", action="store_true", help="Runs a very fast integration test on synthetic Shakespeare text.")
-    parser.add_argument("--iters", type=int, default=1000, help="Number of training iterations.")
+    parser = argparse.ArgumentParser(description="Autoregressive decoder-only Transformer built from scratch, trained as a character-level Shakespeare text generator.")
+    parser.add_argument("--test-run", action="store_true", help="Runs a very fast integration test on a tiny embedded text excerpt.")
+    parser.add_argument("--demo", action="store_true", help="Fast-but-real training pass on a subset of the full corpus; prints a machine-readable result line for scripts/compare_text_generators.py.")
+    parser.add_argument("--iters", type=int, default=1500, help="Number of training iterations.")
+    parser.add_argument("--num-samples", type=int, default=5, help="Number of text samples to generate at the end.")
     args = parser.parse_args()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     if args.test_run:
         print("=== RUNNING FAST INTEGRATION TEST ===")
-        # Build small corpus
-        test_corpus = "The quick brown fox jumps over the lazy dog. Attention is all you need for sequence models."
-        dataset = CharDataset(test_corpus, block_size=8)
-        
+        dataset = CharDataset(FALLBACK_TEXT, block_size=8)
+
         # Instantiate tiny model
         model = MiniTransformerGPT(
-            vocab_size=dataset.vocab_size, 
-            n_embed=16, 
-            n_head=2, 
-            n_layer=1, 
+            vocab_size=dataset.vocab_size,
+            n_embed=16,
+            n_head=2,
+            n_layer=1,
             block_size=8
         ).to(device)
-        
+
         train_transformer(model, dataset, device, max_iters=10, batch_size=4, lr=1e-3)
+        samples = generate_sentences(model, dataset, device, num_sentences=2, top_k=5)
+        print(f"  Sample generations: {samples}")
         print("[SUCCESS] Integration Test Successful!")
         sys.exit(0)
 
+    if args.demo:
+        start_time = time.time()
+        text = load_corpus(__file__)[:DEMO_CORPUS_CHARS]
+        dataset = CharDataset(text, block_size=64)
+
+        model = MiniTransformerGPT(
+            vocab_size=dataset.vocab_size, n_embed=64, n_head=4, n_layer=2, block_size=64
+        ).to(device)
+
+        model, final_loss = train_transformer(model, dataset, device, max_iters=2000, batch_size=64, lr=1e-3)
+        samples = generate_sentences(model, dataset, device, num_sentences=args.num_samples, temperature=0.7, top_k=10)
+        elapsed = time.time() - start_time
+
+        result = {
+            "project": 3,
+            "arch": "Transformer (full self-attention)",
+            "samples": samples,
+            "val_loss": round(float(final_loss), 4),
+            "train_seconds": round(elapsed, 2),
+        }
+        print("###RESULT_JSON### " + json.dumps(result))
+        sys.exit(0)
+
     # Full Run
-    print("=== Training Decoder-only Transformer ===")
-    corpus = TINY_CORPUS * 5 # Expand corpus slightly to ensure enough sample diversity
-    dataset = CharDataset(corpus, block_size=64)
-    
+    print("=== Training Decoder-only Transformer: Shakespeare Text Generator ===")
+    text = load_corpus(__file__)
+    dataset = CharDataset(text, block_size=128)
+
     print(f"Dataset Vocabulary Size: {dataset.vocab_size} unique characters")
-    print(f"Corpus Length: {len(corpus)} characters")
-    
-    # Model parameters: 3 layers, 4 heads, 128 embedding size, block size 64
+    print(f"Corpus Length: {len(text)} characters")
+
+    # Model parameters: 3 layers, 4 heads, 128 embedding size, block size 128
     model = MiniTransformerGPT(
-        vocab_size=dataset.vocab_size, 
-        n_embed=128, 
-        n_head=4, 
-        n_layer=3, 
-        block_size=64
+        vocab_size=dataset.vocab_size,
+        n_embed=128,
+        n_head=4,
+        n_layer=3,
+        block_size=128
     ).to(device)
-    
+
     # Train
-    train_transformer(model, dataset, device, max_iters=args.iters, batch_size=32, lr=1e-3)
-    
+    train_transformer(model, dataset, device, max_iters=args.iters, batch_size=64, lr=1e-3)
+
     # Final Generation Demo
     model.eval()
-    print("\n=== GENERATING SHAKESPEARE (T=0.5, top_k=5) ===")
-    context = torch.tensor([[dataset.char2idx['J']]], dtype=torch.long, device=device) # Priming with J
-    gen_ids = model.generate(context, max_new_tokens=150, temperature=0.5, top_k=5)[0].tolist()
-    print("".join([dataset.idx2char[idx] for idx in gen_ids]))
-    
-    print("\n=== GENERATING SHAKESPEARE (T=0.9, top_k=10) ===")
-    context = torch.tensor([[dataset.char2idx['R']]], dtype=torch.long, device=device) # Priming with R
-    gen_ids = model.generate(context, max_new_tokens=150, temperature=0.9, top_k=10)[0].tolist()
-    print("".join([dataset.idx2char[idx] for idx in gen_ids]))
+    print(f"\n=== GENERATING {args.num_samples} SAMPLE TEXT CONTINUATIONS (T=0.5, top_k=5) ===")
+    for sample in generate_sentences(model, dataset, device, num_sentences=args.num_samples, temperature=0.5, top_k=5):
+        print(f"  {sample!r}")
+
+    print(f"\n=== GENERATING {args.num_samples} SAMPLE TEXT CONTINUATIONS (T=0.9, top_k=10) ===")
+    for sample in generate_sentences(model, dataset, device, num_sentences=args.num_samples, temperature=0.9, top_k=10):
+        print(f"  {sample!r}")
 
     print("\n=== Transformer training finished successfully! ===")

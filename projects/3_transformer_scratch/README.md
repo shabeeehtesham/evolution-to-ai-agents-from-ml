@@ -2,7 +2,31 @@
 
 A clean, modular PyTorch implementation of a generative, decoder-only Transformer (nanoGPT-style) built block-by-block. 
 
-This project demonstrates a thorough understanding of modern deep learning architectures, attention mechanisms, parallel processing, and positional representations, explained with simple and intuitive concepts.
+---
+
+## 🎯 What Are We Actually Building?
+
+**The problem:** ChatGPT, Gemini, Llama, Claude — they all share the same core architecture: the **Transformer**. But what exactly is inside one?
+
+**What this project builds:** A miniature GPT from scratch — the exact same architecture that powers modern LLMs, just much smaller. It trains on the same Shakespeare corpus as Projects 1 and 2, and generates text one character at a time — but this time, every character can attend directly to every other character generated so far, not just recent ones or a single hidden-state summary:
+
+```
+Prompt:    "\n"
+Generated: "LARTIUS:\nThere's that that place hason."
+           "He stame more than you are lend,\nAnd by the corn companed agains..."
+```
+
+**What's the big upgrade over the LSTM from Project 2?**
+
+The LSTM processed text **one character at a time, left-to-right** — like reading a sentence with your finger covering everything to the right. By the time you get to the end, your memory of the beginning has faded.
+
+The Transformer throws that limitation away entirely. It processes **all words in the sentence simultaneously** and lets every word look directly at every other word to decide what's relevant. This is called **Self-Attention** — and it's why modern LLMs can reference something said 10,000 words ago without forgetting it.
+
+This is the architecture that changed everything:
+- **2017**: Google publishes *"Attention Is All You Need"* — Transformers are born
+- **2018**: OpenAI releases GPT-1 based on this architecture
+- **2022**: ChatGPT (GPT-3.5) goes viral worldwide
+- **This project**: We build the core decoder-only version from scratch, same family as GPT
 
 ---
 
@@ -71,10 +95,18 @@ python mini_transformer_gpt.py --test-run
 ```
 
 ### Full Training
-To run a full training session of the Mini-GPT on Shakespeare quotes:
+Trains the Mini-GPT on the full ~1.1M-character Shakespeare corpus ([data/shakespeare.txt](../../data/shakespeare.txt) at the repo root):
 ```bash
 python mini_transformer_gpt.py --iters 1500
 ```
+
+**What you'll actually see** (real observed output from a fast 2,000-iteration demo run on an 80,000-character slice — `--demo` mode, used by [scripts/compare_text_generators.py](../../scripts/compare_text_generators.py)):
+```
+Iteration 1/2000    | Loss: 4.1382
+Iteration 1000/2000 | Loss: 1.5334
+Iteration 2000/2000 | Loss: 1.2401
+```
+Real generated text continuations: `"MENENIUS:\nYou most the made of these to you are stal have and frightat."`, `"The offf, that you may have some of the people and it brought thee,\nThey in nabord valial it."` — real character names (`MENENIUS`), real words, and roughly plausible sentence shape, though not fully grammatical. The loss (1.2401) is measurably lower than both the MLP (1.9896) and the LSTM (1.7435) trained on the same corpus, the concrete payoff of full self-attention over a fixed window or a single recurrent hidden state.
 
 ---
 

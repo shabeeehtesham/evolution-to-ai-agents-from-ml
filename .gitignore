@@ -3,3 +3,6 @@ convert.py
 verify_notebooks.py
 
 NOTES.md
+INTERVIEW_PREP.md
+
+__pycache__/

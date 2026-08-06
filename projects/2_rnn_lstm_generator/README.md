@@ -6,6 +6,30 @@ This project implements two sequential architectures: a **standard Recurrent Neu
 
 ---
 
+## 🎯 What Are We Actually Building?
+
+**The problem:** Project 1's MLP predicts the next character of Shakespeare's text from a **fixed 10-character window** — it's structurally incapable of using anything further back. That's fine for short local patterns, but the moment something depends on what character is speaking or what happened a full sentence earlier, the MLP simply cannot see it.
+
+**What this project builds:** The same character-level text generation task, but the model now reads the text **one character at a time while keeping a running memory** (a *hidden state*) of everything it has seen so far — not just the last 10 characters:
+
+```
+Input (character by character):  C → O → R → I → O → L → A → N → U → S
+Hidden state updates:              h1 → h2 → h3 → h4 → h5 → h6 → h7 → h8 → h9 → h10
+
+Generated (after training):
+  "CORIOLANUS:\nIn the grouther."
+  "Morces:\nWhe canst we refore."
+```
+
+**Why does sequence order matter here?**
+The MLP from Project 1 saw each 10-character window independently — every prediction started from scratch with no memory of anything earlier. Language doesn't work like that: whether a line is likely to end, or which character is speaking, often depends on much more context than the last 10 characters. To capture that, you need **memory** — the ability to carry context forward from arbitrarily far back.
+
+This project shows two approaches to building that memory:
+- **RNN** — simple recurrent memory, but it forgets things from too far back
+- **LSTM** — gated memory that can selectively remember or forget, solving the long-range dependency problem
+
+---
+
 ## 📐 Theory & Mathematical Differences
 
 ```
@@ -47,7 +71,7 @@ During text generation, the model predicts the probability of the next character
 ## 🚀 How to Run
 
 ### Integration Test
-Run a quick, 2-epoch integration test on a short sequence to verify the model compilation, sequence batching, and text generation logic:
+Run a quick, 2-epoch integration test on a short text excerpt to verify model compilation, sequence batching, and generation logic:
 ```bash
 # Test LSTM
 python char_rnn_generator.py --model lstm --test-run
@@ -57,7 +81,7 @@ python char_rnn_generator.py --model rnn --test-run
 ```
 
 ### Full Training
-To run a full training session:
+Trains on the full ~1.1M-character Shakespeare corpus ([data/shakespeare.txt](../../data/shakespeare.txt) at the repo root):
 ```bash
 # Train LSTM (Default)
 python char_rnn_generator.py --model lstm --epochs 15
@@ -65,6 +89,14 @@ python char_rnn_generator.py --model lstm --epochs 15
 # Train RNN
 python char_rnn_generator.py --model rnn --epochs 15
 ```
+
+**What you'll actually see** (real observed output from a fast 10-epoch demo run on an 80,000-character slice — `--demo` mode, used by [scripts/compare_text_generators.py](../../scripts/compare_text_generators.py)):
+```
+Epoch 1/10  | Loss: 2.7853
+Epoch 5/10  | Loss: 2.0713
+Epoch 10/10 | Loss: 1.7435
+```
+Real generated text continuations: `"SICINIUS:\nNo, have no thent beless aill I thee."`, `"Prest they vouth to your fore lormer,\nThe carmins."` — recognizable character-name formatting and real words (`"have"`, `"no"`, `"your"`, `"thee"`) show up, though full sentences don't yet hold together. The loss (1.7435) is already meaningfully lower than Project 1's MLP (1.9896) trained on the same corpus, a direct, measured consequence of having access to the whole sequence instead of just 10 characters.
 
 ---
 

@@ -6,6 +6,35 @@ This project implements a complete **TF-IDF Vector Database** from scratch using
 
 ---
 
+## 🎯 What Are We Actually Building?
+
+**The problem:** Project 3's Transformer generates statistically plausible-*sounding* Shakespearean text — real character names, real words, roughly the right shape — by learning patterns from the same corpus. But ask it *"What play is 'to be or not to be' from?"* and it has no way to answer correctly. It never learned facts about the plays, only what Shakespearean text tends to sound like. If you forced it to answer anyway, it would have to guess — and guessing at facts is hallucination.
+
+**RAG solves this.** Instead of asking a model to remember (or invent) facts, you:
+1. Store real, verified facts in a searchable database
+2. When a question comes in, first *search* the database for the most relevant passages
+3. Paste those passages into the prompt as context
+4. Let the answer come from the actual retrieved facts, not the model's guesswork
+
+This is how Notion AI, GitHub Copilot's workspace features, and enterprise chatbots work in production.
+
+**A concrete example of what this project does:**
+
+```
+Query:  "What play is 'to be or not to be' from?"
+
+Step 1 - Search:  Find the top 2 most relevant facts from the database
+Step 2 - Context: [Retrieved] "'To be, or not to be, that is the question' is
+                   spoken by Prince Hamlet in Act 3, Scene 1 of Shakespeare's
+                   play Hamlet, as he weighs whether it is nobler to endure
+                   suffering or end it."
+Step 3 - Answer:  "'To be, or not to be' is spoken by Prince Hamlet in Hamlet..."
+```
+
+**The difference vs. Project 3:** The Transformer generates new text based on sound patterns learned during training — it has no concept of "correct" beyond what sounds plausible. The RAG Agent answers questions grounded in *specific, real facts you provide* — it can't hallucinate a play title or plot detail that isn't in the database, and it says so plainly when a query falls outside what it knows.
+
+---
+
 ## ⚡ Systems Architecture
 
 ```
@@ -52,9 +81,9 @@ Here is how our custom Vector Database finds the right documents, using a **Libr
 2. **TF (Term Frequency - Local Importance)**: How many times a word is written on a specific index card. If the word "conveyor" appears 10 times in a small article, then "conveyor" is very important to that specific article.
 3. **IDF (Inverse Document Frequency - Global Rarity)**: How rare a word is across the *whole library*. 
    * Common words like "the", "is", or "and" appear on almost every card, so they have a **low IDF** (they don't tell us much about the book's topic).
-   * Rare words like "LSTM", "Xavier", or "TF-IDF" only appear on a few cards, so they have a **high IDF** (they are highly descriptive keywords!).
+   * Rare words like "Coriolanus", "Iago", or "Montague" only appear on a few cards, so they have a **high IDF** (they are highly descriptive keywords!).
 4. **Vector Search (Filing Card Matching)**:
-   * When you type a query (e.g., "Why do basic RNNs fail?"), we make a "query index card" with TF-IDF scores for your keywords.
+   * When you type a query (e.g., "What is the Montague and Capulet feud about?"), we make a "query index card" with TF-IDF scores for your keywords.
    * **Cosine Similarity** compares your query card to every document card. It measures the overlap of rare keywords. The cards that have the highest score (most aligned keywords) are retrieved and handed to the generation engine!
 
 ---
@@ -80,7 +109,7 @@ In our database, we pre-normalize all document vectors ($\|\mathbf{d}\|_2 = 1.0$
 ## 🚀 How to Run
 
 ### Integration Test
-Run a quick test query on the built-in tech facts database:
+Run a quick test query on the built-in Shakespeare facts database:
 ```bash
 python rag_agent.py --test-run
 ```
@@ -88,8 +117,24 @@ python rag_agent.py --test-run
 ### Run Custom Queries
 Run a custom query using the local keyword-matching generation engine:
 ```bash
-python rag_agent.py --query "Why do basic RNNs fail on long sequences?"
+python rag_agent.py --query "What is the Montague and Capulet feud about?"
 ```
+
+**What you'll actually see** (real observed output):
+```
+User Query: 'What is the Montague and Capulet feud about?'
+Retrieving relevant documents...
+  [1] (Score: 0.4445) Romeo and Juliet belong to two feuding families in Verona...
+  [2] (Score: 0.4329) The Montague-Capulet feud in Romeo and Juliet is never fully explained...
+[Local Engine Answer]:
+Based on retrieved data, here is what I found:
+- Romeo and Juliet belong to two feuding families in Verona: Romeo is a
+  Montague and Juliet is a Capulet.
+- The Montague-Capulet feud in Romeo and Juliet is never fully explained in
+  the play - the text calls it an 'ancient grudge' without stating its
+  original cause.
+```
+Ask something outside the 17-fact database (e.g. `"What is the capital of France?"`) and it correctly reports it couldn't find a specific match instead of confidently inventing an answer.
 
 ### Run with Live Gemini API
 To run the generator with the state-of-the-art **Gemini 1.5 Flash** model:
@@ -101,7 +146,7 @@ To run the generator with the state-of-the-art **Gemini 1.5 Flash** model:
    ```
 3. Run the query script:
    ```powershell
-   python rag_agent.py --query "Summarize the differences between RNNs and Transformers based on the documents."
+   python rag_agent.py --query "Who is Iago and what does he do in Othello?"
    ```
 
 ---
