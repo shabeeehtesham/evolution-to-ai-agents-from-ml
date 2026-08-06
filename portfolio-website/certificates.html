@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificates — Shabee Ibn Ehtesham</title>
+    <meta name="description" content="Verifiable certifications and credentials of Shabee Ibn Ehtesham across Generative AI, Machine Learning, Cloud Systems, and Software Engineering.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="certificates">
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+
+    <header class="main-header">
+        <nav class="navbar" aria-label="Main Navigation">
+            <a href="index.html" class="nav-brand">
+                <span class="brand-code">&lt;</span>
+                <span class="brand-name">Shabee Ibn Ehtesham</span>
+                <span class="brand-code">/&gt;</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" data-page="home">Home</a></li>
+                <li><a href="projects.html" data-page="projects">Projects</a></li>
+                <li><a href="certificates.html" data-page="certificates">Certificates</a></li>
+                <li><a href="about.html" data-page="about">About</a></li>
+                <li><a href="https://github.com/shabeeehtesham" target="_blank" class="nav-btn" id="github-profile-btn">GitHub Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Certifications Section -->
+        <section class="certificates-section">
+            <div class="section-header">
+                <h2>Certifications &amp; Credentials</h2>
+                <p>Verifiable milestones in Generative AI, Machine Learning, Cloud Systems, and Software Engineering.</p>
+            </div>
+
+            <!-- Search and Filter Panel -->
+            <div class="certificates-filter-panel">
+                <div class="search-box-wrapper">
+                    <input type="text" id="cert-search-input" placeholder="Search certifications (e.g. AWS, LangChain, Python)..." aria-label="Search Certifications">
+                    <span class="search-icon">🔍</span>
+                </div>
+                <div class="category-filters" id="cert-category-filters">
+                    <button class="filter-btn active" data-category="all" id="btn-cert-all">All</button>
+                    <button class="filter-btn" data-category="genai" id="btn-cert-genai">Generative AI & LLMs</button>
+                    <button class="filter-btn" data-category="ml" id="btn-cert-ml">Machine Learning & DL</button>
+                    <button class="filter-btn" data-category="cloud-devops" id="btn-cert-cloud">Cloud & DevOps</button>
+                    <button class="filter-btn" data-category="software-db" id="btn-cert-software">Software & DBs</button>
+                    <button class="filter-btn" data-category="academic" id="btn-cert-academic">Academic</button>
+                </div>
+            </div>
+
+            <!-- Certifications Grid -->
+            <div class="certificates-grid" id="certs-grid">
+                <!-- Dynamically populated via JS -->
+            </div>
+
+            <!-- Empty State -->
+            <div class="certificates-empty-state" id="certs-empty-state" style="display: none;">
+                <p>No certifications found matching your criteria.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2026 Shabee Ibn Ehtesham.</p>
+        <div class="footer-links">
+            <a href="https://github.com/shabeeehtesham" target="_blank">GitHub</a>
+            <a href="index.html">Back to Top</a>
+        </div>
+    </footer>
+
+    <script src="common.js"></script>
+    <script src="certificates.js"></script>
+</body>
+</html>

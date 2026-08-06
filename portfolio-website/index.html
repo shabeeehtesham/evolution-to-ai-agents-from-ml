@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evolution to AI Agents from ML</title>
-    <meta name="description" content="Explore my interactive machine learning and AI portfolio. Demonstrating a detailed technical journey from basic NumPy Multi-Layer Perceptrons to PyTorch RNN/LSTMs and custom-built Transformers.">
+    <title>Shabee Ibn Ehtesham — AI &amp; Machine Learning Engineer</title>
+    <meta name="description" content="Portfolio of Shabee Ibn Ehtesham — AI and Machine Learning engineering projects, credentials, and background.">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,7 +12,7 @@
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-page="home">
     <!-- Premium Glowing Background Elements -->
     <div class="glow-orb orb-1"></div>
     <div class="glow-orb orb-2"></div>
@@ -21,16 +21,16 @@
     <!-- Navigation Header -->
     <header class="main-header">
         <nav class="navbar" aria-label="Main Navigation">
-            <div class="nav-brand">
+            <a href="index.html" class="nav-brand">
                 <span class="brand-code">&lt;</span>
-                <span class="brand-name">Shabih.AI</span>
+                <span class="brand-name">Shabee Ibn Ehtesham</span>
                 <span class="brand-code">/&gt;</span>
-            </div>
+            </a>
             <ul class="nav-links">
-                <li><a href="#about">About</a></li>
-                <li><a href="#progression">The Progression</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#interactive">Visualizer</a></li>
+                <li><a href="index.html" data-page="home">Home</a></li>
+                <li><a href="projects.html" data-page="projects">Projects</a></li>
+                <li><a href="certificates.html" data-page="certificates">Certificates</a></li>
+                <li><a href="about.html" data-page="about">About</a></li>
                 <li><a href="https://github.com/shabeeehtesham" target="_blank" class="nav-btn" id="github-profile-btn">GitHub Profile</a></li>
             </ul>
         </nav>
@@ -39,291 +39,77 @@
     <!-- Main Content Container -->
     <main>
         <!-- Hero Section -->
-        <section id="about" class="hero-section">
+        <section class="hero-section">
             <div class="hero-content">
-                <div class="badge">AI & Machine Learning Engineer</div>
-                <h1>From Neurons to Transformers</h1>
+                <div class="badge">AI Engineer</div>
+                <h1>Hi, I&rsquo;m Shabee Ibn Ehtesham</h1>
                 <p class="hero-subtitle">
-                    A technical journey mapping the evolution of sequence modeling and cognitive architectures. Showing mathematical foundations from scratch, recurrent sequence memory, self-attention mechanisms, and production-grade Agentic systems.
+                    I build agentic AI and RAG systems for enterprise &mdash; hybrid search, reranking, and observability that make LLM-powered systems reliable in production, not just in demos. Explore the projects, credentials, and background below.
                 </p>
                 <div class="hero-actions">
-                    <a href="#progression" class="btn btn-primary" id="explore-journey-btn">Explore the Journey</a>
-                    <a href="#projects" class="btn btn-secondary" id="view-projects-btn">View Code Projects</a>
+                    <a href="projects.html" class="btn btn-primary">View Projects</a>
+                    <a href="about.html" class="btn btn-secondary">About Me</a>
                 </div>
             </div>
         </section>
 
-        <!-- Progression Section -->
-        <section id="progression" class="progression-section">
-            <div class="section-header">
-                <h2>The Architectural Evolution</h2>
-                <p>Understanding how neural models evolved to process sequence context, memory, and relationships.</p>
-            </div>
-            
-            <div class="timeline-container">
-                <!-- MLP Card -->
-                <div class="timeline-card">
-                    <div class="card-icon">🧠</div>
-                    <div class="card-num">01</div>
-                    <h3>Multi-Layer Perceptron</h3>
-                    <p class="card-tag">Foundations & Backpropagation</p>
-                    <p class="card-desc">
-                        Feedforward network processing inputs through dense linear transformations and activation functions. Backpropagation calculates loss gradients using matrix calculus to adjust weights.
-                    </p>
-                    <ul class="card-highlights">
-                        <li>Vectorized Forward & Backward</li>
-                        <li>Sigmoid, ReLU, Softmax</li>
-                        <li>NumPy Only Implementation</li>
-                    </ul>
-                </div>
-
-                <!-- RNN/LSTM Card -->
-                <div class="timeline-card">
-                    <div class="card-icon">🔄</div>
-                    <div class="card-num">02</div>
-                    <h3>Recurrent Networks</h3>
-                    <p class="card-tag">Sequential Memory & Loops</p>
-                    <p class="card-desc">
-                        Introduces recurrent feedback loops ($h_t$) to process sequences of arbitrary length. LSTMs solve vanishing gradients by gating information flow via internal cell states ($c_t$).
-                    </p>
-                    <ul class="card-highlights">
-                        <li>Character-level language modeling</li>
-                        <li>Gated forget/input/output cells</li>
-                        <li>Temperature-scaled generation</li>
-                    </ul>
-                </div>
-
-                <!-- Transformer Card -->
-                <div class="timeline-card">
-                    <div class="card-icon">⚡</div>
-                    <div class="card-num">03</div>
-                    <h3>Self-Attention Models</h3>
-                    <p class="card-tag">Parallel Context Mapping</p>
-                    <p class="card-desc">
-                        Replaces recurrence with Multi-Head Self-Attention. Tokens query all other tokens simultaneously to map contextual relationships, solving long-range dependencies.
-                    </p>
-                    <ul class="card-highlights">
-                        <li>Causal masking for decoders</li>
-                        <li>Scaled Dot-Product Attention</li>
-                        <li>Stacked LayerNorm & FFN Blocks</li>
-                    </ul>
-                </div>
+        <!-- Quick Navigation -->
+        <section class="quicklinks-section">
+            <div class="quicklink-grid">
+                <a class="quicklink-card" href="projects.html">
+                    <span class="quicklink-icon">&#128193;</span>
+                    <h3>Projects</h3>
+                    <p>Hands-on ML/DS builds, browsed with a scrollable picker &mdash; each one links out to its real GitHub source.</p>
+                    <span class="quicklink-arrow">Browse projects &rarr;</span>
+                </a>
+                <a class="quicklink-card" href="certificates.html">
+                    <span class="quicklink-icon">&#127891;</span>
+                    <h3>Certificates</h3>
+                    <p>Verifiable credentials across Generative AI, Machine Learning, Cloud, and Software Engineering.</p>
+                    <span class="quicklink-arrow">View credentials &rarr;</span>
+                </a>
+                <a class="quicklink-card" href="about.html">
+                    <span class="quicklink-icon">&#128100;</span>
+                    <h3>About</h3>
+                    <p>Background, experience, and skills.</p>
+                    <span class="quicklink-arrow">Read more &rarr;</span>
+                </a>
             </div>
         </section>
 
-        <!-- Project Showcase Section -->
-        <section id="projects" class="projects-section">
+        <!-- Featured Project -->
+        <section class="featured-section">
             <div class="section-header">
-                <h2>Repository Projects</h2>
-                <p>Clean, production-ready source code templates available in my GitHub repository.</p>
+                <h2>Featured Project</h2>
+                <p>The most in-depth build on this site &mdash; four real architectures, four live in-browser demos.</p>
             </div>
-
-            <div class="projects-grid">
-                <!-- Project 1 -->
-                <article class="project-card">
-                    <div class="project-header">
-                        <span class="project-tag">NumPy</span>
-                        <a href="https://github.com/shabeeehtesham" target="_blank" class="github-link" aria-label="Project 1 GitHub Link">
-                            <svg class="git-svg" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-                        </a>
-                    </div>
-                    <h3>MLP from Scratch</h3>
-                    <p>Object-oriented Multi-Layer Perceptron built using only NumPy. Handles forward/backward sweeps, ReLU/Sigmoid Activations, Categorical Cross-Entropy, and mini-batch SGD with momentum on MNIST digits.</p>
-                    <div class="project-footer">
-                        <span>📁 1_neural_network_scratch</span>
-                    </div>
-                </article>
-
-                <!-- Project 2 -->
-                <article class="project-card">
-                    <div class="project-header">
-                        <span class="project-tag">PyTorch</span>
-                        <a href="https://github.com/shabeeehtesham" target="_blank" class="github-link" aria-label="Project 2 GitHub Link">
-                            <svg class="git-svg" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-                        </a>
-                    </div>
-                    <h3>Char RNN & LSTM</h3>
-                    <p>Character-level sequential language model built in PyTorch. Includes custom gate controls comparing standard RNN cells against LSTMs to illustrate memory persistence and gradient flow.</p>
-                    <div class="project-footer">
-                        <span>📁 2_rnn_lstm_generator</span>
-                    </div>
-                </article>
-
-                <!-- Project 3 -->
-                <article class="project-card">
-                    <div class="project-header">
-                        <span class="project-tag">PyTorch</span>
-                        <a href="https://github.com/shabeeehtesham" target="_blank" class="github-link" aria-label="Project 3 GitHub Link">
-                            <svg class="git-svg" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-                        </a>
-                    </div>
-                    <h3>Mini GPT Transformer</h3>
-                    <p>Autoregressive decoder-only Transformer model. Features Multi-Head Causal Self-Attention, positional encodings, GELU FFNs, residual pipelines, and top-k temperature text generation.</p>
-                    <div class="project-footer">
-                        <span>📁 3_transformer_scratch</span>
-                    </div>
-                </article>
-
-                <!-- Project 4 -->
-                <article class="project-card">
-                    <div class="project-header">
-                        <span class="project-tag">NumPy + APIs</span>
-                        <a href="https://github.com/shabeeehtesham" target="_blank" class="github-link" aria-label="Project 4 GitHub Link">
-                            <svg class="git-svg" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-                        </a>
-                    </div>
-                    <h3>RAG AI Agent</h3>
-                    <p>Retrieval-Augmented Generation system. Pairs a NumPy-built TF-IDF vector database with a dynamic prompt routing pipeline and LLM API integrations for context-grounded responses.</p>
-                    <div class="project-footer">
-                        <span>📁 4_rag_agent</span>
-                    </div>
-                </article>
-            </div>
-        </section>
-
-        <!-- Interactive Playground Section -->
-        <section id="interactive" class="playground-section">
-            <div class="section-header">
-                <h2>Interactive Visualizers</h2>
-                <p>Observe the internal mechanics of sequence architectures running in real-time inside your browser.</p>
-            </div>
-
-            <!-- Playground Controls / Tabs -->
-            <div class="playground-tabs">
-                <button class="tab-btn active" data-tab="mlp-tab" id="btn-mlp-tab">1. Neural Net Forward</button>
-                <button class="tab-btn" data-tab="rnn-tab" id="btn-rnn-tab">2. RNN Memory Loop</button>
-                <button class="tab-btn" data-tab="attention-tab" id="btn-attention-tab">3. Multi-Head Attention</button>
-                <button class="tab-btn" data-tab="generator-tab" id="btn-generator-tab">4. Sampling Simulator</button>
-            </div>
-
-            <div class="tab-content-container">
-                <!-- MLP Tab -->
-                <div class="tab-content active" id="mlp-tab">
-                    <div class="viz-layout">
-                        <div class="viz-canvas-area">
-                            <svg id="mlp-svg" width="500" height="300" viewBox="0 0 500 300"></svg>
-                        </div>
-                        <div class="viz-controls">
-                            <h3>Layer Propagations</h3>
-                            <p>Watch numeric input signals move through weights and biases, sum up in hidden nodes, pass through a ReLU activation, and project onto output classification scores.</p>
-                            <div class="control-row">
-                                <button class="btn btn-primary btn-sm" id="mlp-forward-btn">Trigger Forward Pass</button>
-                                <button class="btn btn-secondary btn-sm" id="mlp-reset-btn">Reset Network</button>
-                            </div>
-                            <div class="val-display">
-                                <span class="val-label">Output Score [Class A]:</span>
-                                <span class="val-value" id="mlp-out-0">0.00</span>
-                            </div>
-                            <div class="val-display">
-                                <span class="val-label">Output Score [Class B]:</span>
-                                <span class="val-value" id="mlp-out-1">0.00</span>
-                            </div>
-                        </div>
-                    </div>
+            <article class="project-card featured-project-card">
+                <div class="project-header">
+                    <span class="project-tag">NumPy &middot; PyTorch &middot; RAG</span>
+                    <a href="https://github.com/shabeeehtesham/evolution-to-ai-agents-from-ml" target="_blank" class="github-link" aria-label="GitHub repository">
+                        <svg class="git-svg" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                    </a>
                 </div>
-
-                <!-- RNN Tab -->
-                <div class="tab-content" id="rnn-tab">
-                    <div class="viz-layout">
-                        <div class="viz-canvas-area">
-                            <div class="seq-strip" id="rnn-seq-strip">
-                                <!-- Dynamically filled steps -->
-                            </div>
-                        </div>
-                        <div class="viz-controls">
-                            <h3>Sequential State Unrolling</h3>
-                            <p>Type a short word to visualize how recurrent models process inputs step-by-step. Each character updates the internal hidden memory vector ($h_{t-1} \rightarrow h_t$) to predict the subsequent step.</p>
-                            <div class="control-input-group">
-                                <input type="text" id="rnn-input-word" value="deep" maxlength="8">
-                                <button class="btn btn-primary btn-sm" id="rnn-step-btn">Process Word</button>
-                            </div>
-                            <div class="state-vector-display">
-                                <h4>Hidden Memory State ($h_t$):</h4>
-                                <div class="vector-cells" id="rnn-hidden-cells">
-                                    <span class="vector-cell">0.0</span>
-                                    <span class="vector-cell">0.0</span>
-                                    <span class="vector-cell">0.0</span>
-                                    <span class="vector-cell">0.0</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <h3>Neurons to Transformers</h3>
+                <p>A technical journey mapping the evolution of sequence modeling: the same character-prediction task solved four times, each with a real, better tool &mdash; a from-scratch NumPy MLP, a PyTorch RNN/LSTM, a hand-built causal Transformer, and a TF-IDF RAG agent. All four run live in the browser on their actual trained weights, not mocked demos.</p>
+                <div class="project-footer">
+                    <span>4 live interactive demos</span>
+                    <a href="neurons-to-transformers.html" class="btn btn-primary btn-sm">View Project</a>
                 </div>
-
-                <!-- Attention Tab -->
-                <div class="tab-content" id="attention-tab">
-                    <div class="viz-layout">
-                        <div class="viz-canvas-area">
-                            <div class="matrix-container" id="attention-matrix">
-                                <!-- Dynamically generated grid -->
-                            </div>
-                        </div>
-                        <div class="viz-controls">
-                            <h3>Self-Attention Mapping</h3>
-                            <p>Hover over a word in the sentence below to see the Multi-Head Self-Attention scores. The darker blocks represent higher attention weights, illustrating how the model links tokens dynamically.</p>
-                            <div class="sentence-tokens" id="attention-tokens">
-                                <!-- Tokens list -->
-                            </div>
-                            <div class="attention-metrics">
-                                <strong>Active Head:</strong>
-                                <select id="attn-head-select">
-                                    <option value="0">Head 1 (Syntactic Focus)</option>
-                                    <option value="1">Head 2 (Contextual Links)</option>
-                                    <option value="2">Head 3 (Long-range Anchors)</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Generator Tab -->
-                <div class="tab-content" id="generator-tab">
-                    <div class="viz-layout">
-                        <div class="viz-canvas-area">
-                            <div class="terminal-box">
-                                <div class="terminal-header">
-                                    <span class="dot red"></span>
-                                    <span class="dot yellow"></span>
-                                    <span class="dot green"></span>
-                                    <span class="terminal-title">autoregressive_generator.js</span>
-                                </div>
-                                <div class="terminal-body" id="generator-terminal">
-                                    <span class="terminal-prompt">guest@shabih-ai:~$</span> <span class="terminal-cursor">|</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="viz-controls">
-                            <h3>Generative Model Simulator</h3>
-                            <p>Tune the hyperparameters to observe how softmax temperature scaling influences predictive randomness and text generation output.</p>
-                            
-                            <div class="slider-group">
-                                <label for="temp-slider">Temperature: <span id="temp-val">0.7</span></label>
-                                <input type="range" id="temp-slider" min="0.1" max="2.0" step="0.1" value="0.7">
-                            </div>
-
-                            <div class="slider-group">
-                                <label for="tokens-slider">Max Tokens: <span id="tokens-val">100</span></label>
-                                <input type="range" id="tokens-slider" min="10" max="300" step="10" value="100">
-                            </div>
-
-                            <button class="btn btn-primary" id="trigger-gen-btn">Generate Code Snippet</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </article>
         </section>
     </main>
 
     <!-- Footer Section -->
     <footer class="main-footer">
-        <p>&copy; 2026 Shabih Ehtesham. Developed to demonstrate advanced sequence architectures and machine learning systems.</p>
+        <p>&copy; 2026 Shabee Ibn Ehtesham.</p>
         <div class="footer-links">
             <a href="https://github.com/shabeeehtesham" target="_blank">GitHub</a>
-            <a href="#about">Back to Top</a>
+            <a href="index.html">Back to Top</a>
         </div>
     </footer>
 
-    <!-- Main Logic Script -->
-    <script src="app.js"></script>
+    <!-- Shared Logic -->
+    <script src="common.js"></script>
 </body>
 </html>

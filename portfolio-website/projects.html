@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects — Shabee Ibn Ehtesham</title>
+    <meta name="description" content="Browse Shabee Ibn Ehtesham's ML/DS projects with a scrollable picker — select one to see how it works, with a link to the real GitHub source.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="projects">
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+
+    <header class="main-header">
+        <nav class="navbar" aria-label="Main Navigation">
+            <a href="index.html" class="nav-brand">
+                <span class="brand-code">&lt;</span>
+                <span class="brand-name">Shabee Ibn Ehtesham</span>
+                <span class="brand-code">/&gt;</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" data-page="home">Home</a></li>
+                <li><a href="projects.html" data-page="projects">Projects</a></li>
+                <li><a href="certificates.html" data-page="certificates">Certificates</a></li>
+                <li><a href="about.html" data-page="about">About</a></li>
+                <li><a href="https://github.com/shabeeehtesham" target="_blank" class="nav-btn" id="github-profile-btn">GitHub Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="picker-section">
+            <div class="section-header picker-header">
+                <h2>Projects</h2>
+                <p>Scroll or drag through the reel below &mdash; the centered project is the selected one. Click it, press Enter, or use the arrow keys.</p>
+            </div>
+            <div class="picker-stack">
+                <div class="picker-wrap">
+                    <div class="picker-reel" id="picker-reel" aria-label="Projects"></div>
+                    <div class="picker-center-line" aria-hidden="true"></div>
+                </div>
+                <div class="picker-preview" id="picker-preview">Loading&hellip;</div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2026 Shabee Ibn Ehtesham.</p>
+        <div class="footer-links">
+            <a href="https://github.com/shabeeehtesham" target="_blank">GitHub</a>
+            <a href="index.html">Back to Top</a>
+        </div>
+    </footer>
+
+    <script src="common.js"></script>
+    <script src="projects-picker.js"></script>
+</body>
+</html>

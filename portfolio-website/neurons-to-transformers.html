@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neurons to Transformers — Shabee Ibn Ehtesham</title>
+    <meta name="description" content="A technical journey mapping the evolution of sequence modeling and cognitive architectures — from scratch NumPy MLP, PyTorch RNN/LSTM, a hand-built Transformer, and a RAG agent, all with live in-browser demos.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="projects">
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+
+    <header class="main-header">
+        <nav class="navbar" aria-label="Main Navigation">
+            <a href="index.html" class="nav-brand">
+                <span class="brand-code">&lt;</span>
+                <span class="brand-name">Shabee Ibn Ehtesham</span>
+                <span class="brand-code">/&gt;</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" data-page="home">Home</a></li>
+                <li><a href="projects.html" data-page="projects">Projects</a></li>
+                <li><a href="certificates.html" data-page="certificates">Certificates</a></li>
+                <li><a href="about.html" data-page="about">About</a></li>
+                <li><a href="https://github.com/shabeeehtesham" target="_blank" class="nav-btn" id="github-profile-btn">GitHub Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Project Header -->
+        <section class="project-detail-hero">
+            <a href="projects.html" class="back-link">&larr; All Projects</a>
+            <div class="badge">AI Engineer</div>
+            <h1>From Neurons to Transformers</h1>
+            <p class="hero-subtitle">
+                A technical journey mapping the evolution of sequence modeling and cognitive architectures. Showing mathematical foundations from scratch, recurrent sequence memory, self-attention mechanisms, and production-grade Agentic systems.
+            </p>
+            <div class="hero-actions">
+                <a href="#interactive" class="btn btn-primary">Try the Live Demos</a>
+                <a href="https://github.com/shabeeehtesham/evolution-to-ai-agents-from-ml" target="_blank" class="btn btn-secondary">View on GitHub</a>
+            </div>
+        </section>
+
+        <!-- Interactive Playground Section -->
+        <section id="interactive" class="playground-section">
+            <div class="section-header">
+                <h2>Interactive Visualizers</h2>
+                <p>Observe the internal mechanics of sequence architectures running in real-time inside your browser.</p>
+            </div>
+
+            <!-- Playground Controls / Tabs -->
+            <div class="playground-tabs">
+                <button class="tab-btn active" data-tab="mlp-tab" id="btn-mlp-tab">1. Neural Net Forward</button>
+                <button class="tab-btn" data-tab="rnn-tab" id="btn-rnn-tab">2. RNN Memory Loop</button>
+                <button class="tab-btn" data-tab="attention-tab" id="btn-attention-tab">3. Multi-Head Attention</button>
+                <button class="tab-btn" data-tab="generator-tab" id="btn-generator-tab">4. RAG Retrieval Agent</button>
+            </div>
+
+            <div class="tab-content-container">
+                <!-- MLP Tab -->
+                <div class="tab-content active" id="mlp-tab">
+                    <div class="viz-layout">
+                        <div class="viz-canvas-area">
+                            <svg id="mlp-svg" width="500" height="300" viewBox="0 0 500 300"></svg>
+                        </div>
+                        <div class="viz-controls">
+                            <h3>Live Demo: Type Anything, Get Graded Live</h3>
+                            <p>This runs Project 1's real trained weights &mdash; exported straight from the from-scratch NumPy MLP, trained on the real Shakespeare corpus &mdash; right here in your browser. Type any sentence: every character you've typed gets colored by how confidently the model would have predicted it (green = near the top of its guesses, red = way off), using only the <strong>10 characters before it</strong>. Characters older than that window fade out &mdash; that's the model's real, honest memory limit, made visible.</p>
+                            <textarea id="mlp-live-input" rows="3" maxlength="300" aria-label="Type any sentence">To be, or not to be</textarea>
+                            <div class="mlp-live-preview" id="mlp-live-preview"></div>
+                            <div class="control-row">
+                                <button class="btn btn-secondary btn-sm" id="mlp-continue-btn">Continue Writing</button>
+                                <button class="btn btn-secondary btn-sm" id="mlp-reset-btn">Reset</button>
+                            </div>
+                            <h4 class="mlp-next-heading">What it predicts comes next:</h4>
+                            <div id="mlp-predictions" class="mlp-predictions"></div>
+                            <p class="viz-model-stats" id="mlp-model-stats">Loading trained model weights&hellip;</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RNN Tab -->
+                <div class="tab-content" id="rnn-tab">
+                    <div class="rnn-race-layout">
+                        <h3>Live Demo: Watch the LSTM Win, in Real Time</h3>
+                        <p>This runs Project 2's real trained weights &mdash; a plain RNN and an LSTM, both trained on the same real Shakespeare corpus, exported from PyTorch and re-implemented cell-by-cell in JavaScript. Both models read the exact same real excerpt together, character by character, each one privately guessing what comes next right before it's revealed &mdash; colored by how confident it was. Watch the two live meters below: the LSTM's rolling confidence consistently pulls ahead of the plain RNN's as the passage streams in, because its memory doesn't fade the way a plain RNN's does.</p>
+                        <div class="rnn-stat-card" id="rnn-stat-card">Loading trained model weights&hellip;</div>
+                        <div class="control-input-group">
+                            <select id="rnn-excerpt-select" aria-label="Choose a Shakespeare excerpt"></select>
+                            <button class="btn btn-primary btn-sm" id="rnn-race-btn">Read Along</button>
+                        </div>
+                        <div class="rnn-leader-banner" id="rnn-leader-banner">Pick an excerpt and click &ldquo;Read Along&rdquo; to start.</div>
+                        <div class="rnn-race-grid">
+                            <div class="rnn-race-col">
+                                <div class="rnn-meter-row">
+                                    <h4 class="rnn-race-heading">LSTM reads:</h4>
+                                    <span class="rnn-meter-value" id="rnn-meter-lstm">&mdash;</span>
+                                </div>
+                                <div class="mlp-live-preview rnn-race-output" id="rnn-race-lstm"></div>
+                            </div>
+                            <div class="rnn-race-col">
+                                <div class="rnn-meter-row">
+                                    <h4 class="rnn-race-heading">Plain RNN reads:</h4>
+                                    <span class="rnn-meter-value" id="rnn-meter-rnn">&mdash;</span>
+                                </div>
+                                <div class="mlp-live-preview rnn-race-output" id="rnn-race-rnn"></div>
+                            </div>
+                        </div>
+
+                        <h4 class="rnn-cell-heading">How the two cells are actually built &mdash; live, from the same read-along</h4>
+                        <p class="rnn-cell-intro">These aren't diagrams of the average network &mdash; the glowing nodes are the REAL gate values from the character being read above, updating live. Watch the LSTM's forget gate (<strong>f</strong>): near-white means it's keeping its old cell state, dim means it's clearing it. The plain RNN has no such gate &mdash; its entire memory is overwritten by one <code>tanh</code> every single step.</p>
+                        <div class="rnn-cell-diagrams">
+                            <div class="rnn-cell-diagram-col">
+                                <h4 class="rnn-race-heading">Plain RNN cell</h4>
+                                <svg id="rnn-cell-svg-rnn" viewBox="0 0 260 200" class="rnn-cell-svg">
+                                    <line class="edge" x1="40" y1="150" x2="140" y2="100"></line>
+                                    <line class="edge" x1="40" y1="50" x2="140" y2="100"></line>
+                                    <line class="edge" x1="140" y1="100" x2="230" y2="100"></line>
+
+                                    <circle class="node" id="rnn-cell-rnn-node-x" cx="40" cy="150" r="14"></circle>
+                                    <text class="cell-node-label" x="40" y="154" text-anchor="middle">x&#8348;</text>
+                                    <circle class="node" id="rnn-cell-rnn-node-hprev" cx="40" cy="50" r="14"></circle>
+                                    <text class="cell-node-label" x="40" y="54" text-anchor="middle">h&#8348;&#8331;&#8321;</text>
+                                    <circle class="node gate-node" id="rnn-cell-rnn-node-combine" cx="140" cy="100" r="18"></circle>
+                                    <text class="cell-node-label" x="140" y="104" text-anchor="middle">tanh</text>
+                                    <circle class="node" id="rnn-cell-rnn-node-hnext" cx="230" cy="100" r="14"></circle>
+                                    <text class="cell-node-label" x="230" y="104" text-anchor="middle">h&#8348;</text>
+
+                                    <text class="cell-caption" x="140" y="180" text-anchor="middle">&#8635; h&#8348; is fed back and fully</text>
+                                    <text class="cell-caption" x="140" y="192" text-anchor="middle">rewritten every single step</text>
+                                </svg>
+                            </div>
+                            <div class="rnn-cell-diagram-col">
+                                <h4 class="rnn-race-heading">LSTM cell</h4>
+                                <svg id="rnn-cell-svg-lstm" viewBox="0 0 320 220" class="rnn-cell-svg">
+                                    <line class="edge" x1="30" y1="200" x2="140" y2="20"></line>
+                                    <line class="edge" x1="30" y1="200" x2="140" y2="75"></line>
+                                    <line class="edge" x1="30" y1="200" x2="140" y2="130"></line>
+                                    <line class="edge" x1="30" y1="200" x2="140" y2="185"></line>
+                                    <line class="edge" x1="30" y1="20" x2="140" y2="20"></line>
+                                    <line class="edge" x1="30" y1="20" x2="140" y2="75"></line>
+                                    <line class="edge" x1="30" y1="20" x2="140" y2="130"></line>
+                                    <line class="edge" x1="30" y1="20" x2="140" y2="185"></line>
+
+                                    <line class="highway-edge" id="rnn-cell-lstm-highway" x1="30" y1="110" x2="250" y2="110"></line>
+                                    <line class="edge" x1="140" y1="75" x2="170" y2="110"></line>
+                                    <line class="edge" x1="140" y1="20" x2="210" y2="110"></line>
+                                    <line class="edge" x1="140" y1="130" x2="210" y2="110"></line>
+                                    <line class="edge" x1="140" y1="185" x2="290" y2="185"></line>
+                                    <line class="edge" x1="250" y1="110" x2="290" y2="185"></line>
+
+                                    <circle class="node" cx="30" cy="200" r="12"></circle>
+                                    <text class="cell-node-label" x="30" y="204" text-anchor="middle">x&#8348;</text>
+                                    <circle class="node" cx="30" cy="20" r="12"></circle>
+                                    <text class="cell-node-label" x="30" y="24" text-anchor="middle">h&#8348;&#8331;&#8321;</text>
+                                    <circle class="node" cx="30" cy="110" r="12"></circle>
+                                    <text class="cell-node-label" x="30" y="114" text-anchor="middle">c&#8348;&#8331;&#8321;</text>
+
+                                    <circle class="node gate-node" id="rnn-cell-lstm-node-i" cx="140" cy="20" r="13"></circle>
+                                    <text class="cell-node-label" x="140" y="24" text-anchor="middle">i</text>
+                                    <circle class="node gate-node" id="rnn-cell-lstm-node-f" cx="140" cy="75" r="13"></circle>
+                                    <text class="cell-node-label" x="140" y="79" text-anchor="middle">f</text>
+                                    <circle class="node gate-node" id="rnn-cell-lstm-node-g" cx="140" cy="130" r="13"></circle>
+                                    <text class="cell-node-label" x="140" y="134" text-anchor="middle">g</text>
+                                    <circle class="node gate-node" id="rnn-cell-lstm-node-o" cx="140" cy="185" r="13"></circle>
+                                    <text class="cell-node-label" x="140" y="189" text-anchor="middle">o</text>
+
+                                    <circle class="highway-junction" cx="170" cy="110" r="7"></circle>
+                                    <text class="cell-node-label" x="170" y="113" text-anchor="middle">&times;</text>
+                                    <circle class="highway-junction" cx="210" cy="110" r="7"></circle>
+                                    <text class="cell-node-label" x="210" y="113" text-anchor="middle">+</text>
+
+                                    <circle class="node" cx="250" cy="110" r="13"></circle>
+                                    <text class="cell-node-label" x="250" y="114" text-anchor="middle">c&#8348;</text>
+                                    <circle class="node" cx="290" cy="185" r="13"></circle>
+                                    <text class="cell-node-label" x="290" y="189" text-anchor="middle">h&#8348;</text>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="control-row">
+                            <button class="btn btn-secondary btn-sm" id="rnn-race-reset-btn">Reset</button>
+                        </div>
+                        <p class="viz-model-stats" id="rnn-model-stats"></p>
+                    </div>
+                </div>
+
+                <!-- Attention Tab -->
+                <div class="tab-content" id="attention-tab">
+                    <div class="attn-layout">
+                        <h3>Live Demo: How We Improved, and Real Self-Attention</h3>
+                        <p>This runs Project 3's real trained weights &mdash; a decoder-only Transformer with causal multi-head self-attention, exported from PyTorch and re-implemented block-by-block in JavaScript (embeddings, layer norm, Q/K/V projections, softmax attention, feedforward, all of it). The stat card below is the real progression across all three architectures on the same Shakespeare task. Below that, type a short prompt: the heatmap shows the model's own real attention weights &mdash; which earlier characters it actually looked at to predict each next one &mdash; and "Continue Writing" hands control to its real autoregressive generation.</p>
+                        <div class="rnn-stat-card progression-card" id="progression-card">Loading trained model weights&hellip;</div>
+
+                        <div class="control-input-group">
+                            <input type="text" id="attn-prompt-input" value="To be or not to be" maxlength="24" aria-label="Short prompt (max 24 characters)">
+                            <button class="btn btn-primary btn-sm" id="attn-run-btn">Run Transformer</button>
+                        </div>
+                        <div class="control-row">
+                            <button class="btn btn-secondary btn-sm" id="attn-continue-btn">Continue Writing</button>
+                            <button class="btn btn-secondary btn-sm" id="attn-reset-btn">Reset</button>
+                        </div>
+
+                        <div class="attention-metrics">
+                            <label><strong>Layer:</strong>
+                                <select id="attn-layer-select" aria-label="Transformer layer"></select>
+                            </label>
+                            <label><strong>Head:</strong>
+                                <select id="attn-head-select" aria-label="Attention head"></select>
+                            </label>
+                        </div>
+
+                        <div class="sentence-tokens" id="attention-tokens">
+                            <!-- Tokens list -->
+                        </div>
+                        <div class="matrix-scroll">
+                            <div class="matrix-container" id="attention-matrix">
+                                <!-- Dynamically generated grid -->
+                            </div>
+                        </div>
+
+                        <div class="mlp-live-preview rnn-race-output" id="attn-generated-output"></div>
+                        <p class="viz-model-stats" id="attn-model-stats">Loading trained model weights&hellip;</p>
+                    </div>
+                </div>
+
+                <!-- RAG Tab -->
+                <div class="tab-content" id="generator-tab">
+                    <div class="attn-layout">
+                        <h3>Live Demo: Retrieval-Augmented Generation</h3>
+                        <p>This runs Project 4's real pipeline &mdash; a from-scratch TF-IDF vector database (NumPy in Python, re-implemented in JavaScript here) retrieving from the same 17 real, cross-checked Shakespeare facts the CLI agent uses, then the same local keyword-extraction engine the CLI falls back to when no Gemini API key is present. Ask a question: watch it actually <strong>retrieve</strong> the most relevant facts by real cosine similarity, then <strong>generate</strong> an answer built only from what it retrieved.</p>
+                        <p>This is where the story from tabs 1&ndash;3 lands. Self-attention (tab 3) let a Transformer weigh every earlier token at once instead of one step at a time like the RNN/LSTM &mdash; that parallel, long-range context is the core mechanism behind every modern large language model (LLM). It's why LLMs write fluent, coherent text. But an LLM's knowledge is frozen at training time, and it can misremember. RAG is the fix: instead of trusting only what the model memorized, <strong>retrieve</strong> real facts first, then let the model generate an answer grounded in them &mdash; verifiable, not just plausible-sounding.</p>
+
+                        <div class="rag-examples" id="rag-examples"></div>
+                        <div class="control-input-group">
+                            <input type="text" id="rag-query-input" value="Who is Iago and what does he do in Othello?" maxlength="120" aria-label="Ask a question about Shakespeare">
+                            <button class="btn btn-primary btn-sm" id="rag-ask-btn">Ask</button>
+                        </div>
+                        <div class="control-row">
+                            <button class="btn btn-secondary btn-sm" id="rag-reset-btn">Reset</button>
+                        </div>
+
+                        <!-- Architecture: mirrors RAGAgent.query()'s own real stages
+                             (RETRIEVE / AUGMENT / GENERATE) exactly, not an invented
+                             simplification - each node lights up live as that real
+                             step actually runs. -->
+                        <div class="rag-pipeline" id="rag-pipeline">
+                            <div class="rag-pipe-node" id="rag-pipe-query">
+                                <span class="rag-pipe-label">Query</span>
+                                <span class="rag-pipe-sub">what you typed</span>
+                            </div>
+                            <div class="rag-pipe-arrow">&rarr;</div>
+                            <div class="rag-pipe-node" id="rag-pipe-retrieve">
+                                <span class="rag-pipe-label">1. Retrieve</span>
+                                <span class="rag-pipe-sub">TF-IDF cosine similarity</span>
+                            </div>
+                            <div class="rag-pipe-arrow">&rarr;</div>
+                            <div class="rag-pipe-node" id="rag-pipe-augment">
+                                <span class="rag-pipe-label">2. Augment</span>
+                                <span class="rag-pipe-sub">facts &rarr; prompt template</span>
+                            </div>
+                            <div class="rag-pipe-arrow">&rarr;</div>
+                            <div class="rag-pipe-node" id="rag-pipe-generate">
+                                <span class="rag-pipe-label">3. Generate</span>
+                                <span class="rag-pipe-sub">local extraction engine</span>
+                            </div>
+                            <div class="rag-pipe-arrow">&rarr;</div>
+                            <div class="rag-pipe-node" id="rag-pipe-response">
+                                <span class="rag-pipe-label">Response</span>
+                                <span class="rag-pipe-sub">shown below</span>
+                            </div>
+                        </div>
+
+                        <div class="rag-step" id="rag-step-retrieve">
+                            <h4 class="rnn-race-heading">1. Retrieve &mdash; real cosine similarity against the fact database</h4>
+                            <div class="mlp-predictions" id="rag-retrieved"></div>
+                        </div>
+
+                        <div class="rag-step" id="rag-step-augment">
+                            <h4 class="rnn-race-heading">2. Augment &mdash; the real prompt built from what was retrieved</h4>
+                            <pre class="rag-prompt-box" id="rag-augmented-prompt"></pre>
+                        </div>
+
+                        <div class="rag-step" id="rag-step-answer">
+                            <h4 class="rnn-race-heading">3. Generate &mdash; answer built only from the retrieved facts above</h4>
+                            <div class="rag-answer-box" id="rag-answer"></div>
+                        </div>
+
+                        <p class="viz-model-stats" id="rag-model-stats">Loading the real facts database&hellip;</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Progression Section -->
+        <section id="progression" class="progression-section">
+            <div class="section-header">
+                <h2>The Architectural Evolution</h2>
+                <p>Understanding how neural models evolved to process sequence context, memory, and relationships.</p>
+            </div>
+
+            <div class="timeline-container">
+                <!-- MLP Card -->
+                <div class="timeline-card">
+                    <div class="card-icon">🧠</div>
+                    <div class="card-num">01</div>
+                    <h3>Multi-Layer Perceptron</h3>
+                    <p class="card-tag">Foundations &amp; Backpropagation</p>
+                    <p class="card-desc">
+                        Feedforward network processing inputs through dense linear transformations and activation functions. Backpropagation calculates loss gradients using matrix calculus to adjust weights.
+                    </p>
+                    <ul class="card-highlights">
+                        <li>Vectorized Forward &amp; Backward</li>
+                        <li>Sigmoid, ReLU, Softmax</li>
+                        <li>NumPy Only Implementation</li>
+                    </ul>
+                </div>
+
+                <!-- RNN/LSTM Card -->
+                <div class="timeline-card">
+                    <div class="card-icon">🔄</div>
+                    <div class="card-num">02</div>
+                    <h3>Recurrent Networks</h3>
+                    <p class="card-tag">Sequential Memory &amp; Loops</p>
+                    <p class="card-desc">
+                        Introduces recurrent feedback loops (<var>h<sub>t</sub></var>) to process sequences of arbitrary length. LSTMs solve vanishing gradients by gating information flow via internal cell states (<var>c<sub>t</sub></var>).
+                    </p>
+                    <ul class="card-highlights">
+                        <li>Character-level language modeling</li>
+                        <li>Gated forget/input/output cells</li>
+                        <li>Temperature-scaled generation</li>
+                    </ul>
+                </div>
+
+                <!-- Transformer Card -->
+                <div class="timeline-card">
+                    <div class="card-icon">⚡</div>
+                    <div class="card-num">03</div>
+                    <h3>Self-Attention Models</h3>
+                    <p class="card-tag">Parallel Context Mapping</p>
+                    <p class="card-desc">
+                        Replaces recurrence with Multi-Head Self-Attention. Tokens query all other tokens simultaneously to map contextual relationships, solving long-range dependencies.
+                    </p>
+                    <ul class="card-highlights">
+                        <li>Causal masking for decoders</li>
+                        <li>Scaled Dot-Product Attention</li>
+                        <li>Stacked LayerNorm &amp; FFN Blocks</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Showcase Section -->
+        <section id="projects" class="projects-section">
+            <div class="section-header">
+                <h2>Repository Projects</h2>
+                <p>Clean, production-ready source code templates available in my GitHub repository.</p>
+            </div>
+
+            <div class="projects-grid">
+                <!-- Project 1 -->
+                <article class="project-card">
+                    <div class="project-header">
+                        <span class="project-tag">NumPy</span>
+                        <a href="https://github.com/shabeeehtesham/evolution-to-ai-agents-from-ml/tree/main/projects/1_neural_network_scratch" target="_blank" class="github-link" aria-label="Project 1 GitHub Link">
+                            <svg class="git-svg" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                        </a>
+                    </div>
+                    <h3>MLP from Scratch</h3>
+                    <p>Object-oriented Multi-Layer Perceptron built using only NumPy. Handles forward/backward sweeps, ReLU/Sigmoid Activations, Categorical Cross-Entropy, and mini-batch SGD with momentum &mdash; predicting the next character of Shakespeare's text from a fixed 10-character window.</p>
+                    <div class="project-footer">
+                        <span>📁 1_neural_network_scratch</span>
+                    </div>
+                </article>
+
+                <!-- Project 2 -->
+                <article class="project-card">
+                    <div class="project-header">
+                        <span class="project-tag">PyTorch</span>
+                        <a href="https://github.com/shabeeehtesham/evolution-to-ai-agents-from-ml/tree/main/projects/2_rnn_lstm_generator" target="_blank" class="github-link" aria-label="Project 2 GitHub Link">
+                            <svg class="git-svg" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                        </a>
+                    </div>
+                    <h3>Char RNN &amp; LSTM</h3>
+                    <p>Character-level sequential language model built in PyTorch. Includes custom gate controls comparing standard RNN cells against LSTMs to illustrate memory persistence and gradient flow.</p>
+                    <div class="project-footer">
+                        <span>📁 2_rnn_lstm_generator</span>
+                    </div>
+                </article>
+
+                <!-- Project 3 -->
+                <article class="project-card">
+                    <div class="project-header">
+                        <span class="project-tag">PyTorch</span>
+                        <a href="https://github.com/shabeeehtesham/evolution-to-ai-agents-from-ml/tree/main/projects/3_transformer_scratch" target="_blank" class="github-link" aria-label="Project 3 GitHub Link">
+                            <svg class="git-svg" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                        </a>
+                    </div>
+                    <h3>Mini GPT Transformer</h3>
+                    <p>Autoregressive decoder-only Transformer model. Features Multi-Head Causal Self-Attention, positional encodings, GELU FFNs, residual pipelines, and top-k temperature text generation.</p>
+                    <div class="project-footer">
+                        <span>📁 3_transformer_scratch</span>
+                    </div>
+                </article>
+
+                <!-- Project 4 -->
+                <article class="project-card">
+                    <div class="project-header">
+                        <span class="project-tag">NumPy + APIs</span>
+                        <a href="https://github.com/shabeeehtesham/evolution-to-ai-agents-from-ml/tree/main/projects/4_rag_agent" target="_blank" class="github-link" aria-label="Project 4 GitHub Link">
+                            <svg class="git-svg" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                        </a>
+                    </div>
+                    <h3>RAG AI Agent</h3>
+                    <p>Retrieval-Augmented Generation system. Pairs a NumPy-built TF-IDF vector database with a dynamic prompt routing pipeline and LLM API integrations for context-grounded responses.</p>
+                    <div class="project-footer">
+                        <span>📁 4_rag_agent</span>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2026 Shabee Ibn Ehtesham. Developed to demonstrate advanced sequence architectures and machine learning systems.</p>
+        <div class="footer-links">
+            <a href="https://github.com/shabeeehtesham/evolution-to-ai-agents-from-ml" target="_blank">GitHub</a>
+            <a href="projects.html">All Projects</a>
+        </div>
+    </footer>
+
+    <script src="common.js"></script>
+    <script src="neurons-to-transformers.js"></script>
+</body>
+</html>
