@@ -48,9 +48,8 @@ Run [scripts/compare_text_generators.py](scripts/compare_text_generators.py) to 
 ---
 
 ## 🌐 Interactive Visual Portfolio
-To see these architectures in action, check out the interactive web dashboard!
-- Open the [Interactive Portfolio Webpage](portfolio-website/index.html) in your browser.
-- It includes step-by-step simulations of a feed-forward pass, an RNN text-unrolling process, and a real-time Multi-Head Attention weights visualizer.
+To see these architectures in action, check out the interactive web dashboard — see [portfolio-website/README.md](portfolio-website/README.md) for how to run it (it needs a local server, not a direct `file://` open, since the live demos fetch real trained weights).
+- Real in-browser demos: an MLP forward pass, an RNN-vs-LSTM read-along race, a live Multi-Head Attention heatmap, and a RAG retrieve/augment/generate pipeline — all running on actual trained weights, not mocked data.
 
 ---
 
