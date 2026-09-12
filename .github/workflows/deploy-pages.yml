@@ -1,9 +1,11 @@
+# Retired: the static-JS demo site this deployed has been replaced by the
+# server-side webapp/ (FastAPI + Streamlit, real Python inference). Kept as
+# manual-only (workflow_dispatch) instead of deleted, in case the static site
+# is ever needed again - to fully unpublish the live GitHub Pages URL, also
+# disable Pages under repo Settings > Pages.
 name: Deploy portfolio to GitHub Pages
 
 on:
-  push:
-    branches: ["main"]
-    paths: ["portfolio-website/**"]
   workflow_dispatch:
 
 permissions:

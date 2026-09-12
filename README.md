@@ -47,9 +47,10 @@ Run [scripts/compare_text_generators.py](scripts/compare_text_generators.py) to 
 
 ---
 
-## 🌐 Interactive Visual Portfolio
-To see these architectures in action, check out the interactive web dashboard — see [portfolio-website/README.md](portfolio-website/README.md) for how to run it (it needs a local server, not a direct `file://` open, since the live demos fetch real trained weights).
-- Real in-browser demos: an MLP forward pass, an RNN-vs-LSTM read-along race, a live Multi-Head Attention heatmap, and a RAG retrieve/augment/generate pipeline — all running on actual trained weights, not mocked data.
+## 🌐 Interactive Webapp (FastAPI + Streamlit)
+The live demo is now a real server-side app — see [webapp/README.md](webapp/README.md) for how to run it locally or with Docker. A FastAPI backend reconstructs the actual trained model objects from the weight files below and runs real Python inference (not JavaScript reimplementations); a Streamlit frontend calls it for the MLP live-scoring demo, the RNN-vs-LSTM read-along, a real Multi-Head Attention heatmap, and the RAG retrieve/augment/generate pipeline.
+
+*(The older client-side JS demo at `portfolio-website/` still exists in this repo but is no longer the primary live demo — its GitHub Pages auto-deploy has been switched to manual-only.)*
 
 ---
 
