@@ -4,9 +4,10 @@
 #
 # Dumps SHAKESPEARE_FACTS_DB straight from rag_agent.py (loaded directly,
 # so there's no copy-pasted, driftable duplicate) to a small JSON file
-# that portfolio-website/app.js loads and runs its own from-scratch TF-IDF
-# vector database over, in the browser - the same retrieve() algorithm
-# SimpleVectorDB runs in Python, on the exact same facts.
+# here in exported_weights/. Copy that file into the portfolio repo's
+# model_weights/ to update the live demos - the browser JS runs its own
+# from-scratch TF-IDF vector database over it, the same retrieve()
+# algorithm SimpleVectorDB runs in Python, on the exact same facts.
 # =====================================================================
 
 import importlib.util
@@ -15,7 +16,7 @@ import os
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODULE_PATH = os.path.join(REPO_ROOT, "projects", "4_rag_agent", "rag_agent.py")
-OUTPUT_PATH = os.path.join(REPO_ROOT, "portfolio-website", "model_weights", "rag_facts.json")
+OUTPUT_PATH = os.path.join(REPO_ROOT, "exported_weights", "rag_facts.json")
 
 
 def load_rag_module():

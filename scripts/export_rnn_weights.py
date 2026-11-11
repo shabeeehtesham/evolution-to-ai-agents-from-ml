@@ -18,7 +18,7 @@ import torch
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODULE_PATH = os.path.join(REPO_ROOT, "projects", "2_rnn_lstm_generator", "char_rnn_generator.py")
-OUTPUT_PATH = os.path.join(REPO_ROOT, "portfolio-website", "model_weights", "rnn_weights.json")
+OUTPUT_PATH = os.path.join(REPO_ROOT, "exported_weights", "rnn_weights.json")
 
 EMBED_SIZE = 32
 HIDDEN_SIZE = 128

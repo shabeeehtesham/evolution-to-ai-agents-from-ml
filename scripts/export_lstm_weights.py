@@ -4,11 +4,12 @@
 #
 # Trains the actual PyTorch CharLSTM (same code path as
 # char_rnn_generator.py, loaded directly so there's no duplicated
-# training logic) and dumps its weights to a small JSON file that
-# portfolio-website/app.js loads and runs for real, in the browser,
-# with a hand-written LSTM cell in plain JavaScript. No fake numbers -
-# the visualizer runs the same embed -> LSTM gates -> decoder pipeline
-# the PyTorch model runs, using these exact trained parameters.
+# training logic) and dumps its weights to a small JSON file here in
+# exported_weights/. Copy that file into the portfolio repo's
+# model_weights/ to update the live demos - the browser JS runs the same
+# embed -> LSTM gates -> decoder pipeline with a hand-written cell, and
+# the server-side webapp reconstructs this exact model object directly.
+# No fake numbers either way, using these exact trained parameters.
 # =====================================================================
 
 import importlib.util
@@ -19,7 +20,7 @@ import torch
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODULE_PATH = os.path.join(REPO_ROOT, "projects", "2_rnn_lstm_generator", "char_rnn_generator.py")
-OUTPUT_PATH = os.path.join(REPO_ROOT, "portfolio-website", "model_weights", "lstm_weights.json")
+OUTPUT_PATH = os.path.join(REPO_ROOT, "exported_weights", "lstm_weights.json")
 
 EMBED_SIZE = 32
 HIDDEN_SIZE = 128

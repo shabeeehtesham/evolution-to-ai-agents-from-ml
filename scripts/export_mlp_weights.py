@@ -4,11 +4,12 @@
 #
 # Trains the actual from-scratch NumPy MLP (same code path as
 # `neural_network_scratch.py`, loaded directly so there's no duplicated
-# training logic) and dumps its weights to a small JSON file that
-# portfolio-website/app.js loads and runs for real, in the browser, with
-# plain JavaScript matrix math. No fake numbers - the visualizer performs
-# the same one-hot -> Dense -> ReLU -> Dense -> Softmax pipeline the
-# Python model runs, using these exact trained parameters.
+# training logic) and dumps its weights to a small JSON file here in
+# exported_weights/. Copy that file into the portfolio repo's
+# model_weights/ to update the live demos - the browser JS performs the
+# same one-hot -> Dense -> ReLU -> Dense -> Softmax pipeline by hand, and
+# the server-side webapp reconstructs this exact model object directly.
+# No fake numbers either way, using these exact trained parameters.
 # =====================================================================
 
 import importlib.util
@@ -19,7 +20,7 @@ import numpy as np
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODULE_PATH = os.path.join(REPO_ROOT, "projects", "1_neural_network_scratch", "neural_network_scratch.py")
-OUTPUT_PATH = os.path.join(REPO_ROOT, "portfolio-website", "model_weights", "mlp_weights.json")
+OUTPUT_PATH = os.path.join(REPO_ROOT, "exported_weights", "mlp_weights.json")
 
 
 def load_mlp_module():

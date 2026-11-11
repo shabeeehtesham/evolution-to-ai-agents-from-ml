@@ -6,3 +6,8 @@ NOTES.md
 INTERVIEW_PREP.md
 
 __pycache__/
+
+# Local export output - regenerate with scripts/export_*.py and copy into
+# the portfolio repo's model_weights/; not tracked here since that repo is
+# the canonical home for "the weights currently deployed".
+exported_weights/

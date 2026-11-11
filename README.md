@@ -1,8 +1,10 @@
 # Evolution to AI Agents from ML
 
-Welcome to my **Evolution to AI Agents from ML** portfolio. This repository showcases my technical progression from building core mathematical foundations from scratch to developing state-of-the-art transformer architectures and production-level Agentic AI applications.
+**Evolution to AI Agents from ML** is one project: a technical progression from building core mathematical foundations from scratch to developing state-of-the-art transformer architectures and production-level Agentic AI applications.
 
 Each folder in this repository represents a major milestone in modern machine learning, complete with custom implementations, clean PyTorch/NumPy code, and comprehensive explanations.
+
+This repo is the ML project itself, not my portfolio — see **[my portfolio](https://github.com/shabeeehtesham/shabeeehtesham.github.io)** (live at [shabeeehtesham.github.io](https://shabeeehtesham.github.io/)) for this and other projects presented together, plus both a client-side browser demo and a server-side FastAPI + Streamlit webapp of the four architectures below.
 
 ---
 
@@ -47,10 +49,21 @@ Run [scripts/compare_text_generators.py](scripts/compare_text_generators.py) to 
 
 ---
 
-## 🌐 Interactive Webapp (FastAPI + Streamlit)
-The live demo is now a real server-side app — see [webapp/README.md](webapp/README.md) for how to run it locally or with Docker. A FastAPI backend reconstructs the actual trained model objects from the weight files below and runs real Python inference (not JavaScript reimplementations); a Streamlit frontend calls it for the MLP live-scoring demo, the RNN-vs-LSTM read-along, a real Multi-Head Attention heatmap, and the RAG retrieve/augment/generate pipeline.
+## 🌐 Live demos
 
-*(The older client-side JS demo at `portfolio-website/` still exists in this repo but is no longer the primary live demo — its GitHub Pages auto-deploy has been switched to manual-only.)*
+Both live demos (a client-side browser version and a server-side FastAPI + Streamlit webapp) now live in the separate [portfolio repo](https://github.com/shabeeehtesham/shabeeehtesham.github.io), not here — this repo stays focused on the ML project itself. They vendor in copies of this repo's trained weights and model code rather than depending on it at runtime, so if you retrain something here, see "Updating the live demos" below.
+
+## 🔄 Updating the live demos after retraining
+
+```bash
+python scripts/export_mlp_weights.py
+python scripts/export_rnn_weights.py
+python scripts/export_lstm_weights.py
+python scripts/export_transformer_weights.py
+python scripts/export_rag_facts.py
+```
+
+Each writes fresh JSON into this repo's local `exported_weights/` (gitignored - it's a build output, not tracked here). Copy the updated file(s) into the portfolio repo's `model_weights/`, and if a model's *class definition* changed (not just its weights), also copy the matching `.py` file into that repo's `webapp/vendor_projects/`.
 
 ---
 

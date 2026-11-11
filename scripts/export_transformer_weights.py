@@ -4,13 +4,14 @@
 #
 # Trains the actual PyTorch MiniTransformerGPT (same code path as
 # mini_transformer_gpt.py, loaded directly so there's no duplicated
-# training logic) and dumps its weights to a JSON file that
-# portfolio-website/app.js loads and runs for real, in the browser,
-# with a hand-written transformer forward pass (embeddings, causal
-# self-attention per head, feedforward, layer norm) in plain JavaScript.
-# No fake numbers - the visualizer runs the same pipeline the PyTorch
-# model runs, using these exact trained parameters, including the real
-# post-softmax attention weights for whatever the user types.
+# training logic) and dumps its weights to a JSON file here in
+# exported_weights/. Copy that file into the portfolio repo's
+# model_weights/ to update the live demos - the browser JS runs a
+# hand-written transformer forward pass (embeddings, causal self-attention
+# per head, feedforward, layer norm), and the server-side webapp
+# reconstructs this exact model object directly. No fake numbers either
+# way, including the real post-softmax attention weights for whatever
+# the user types.
 # =====================================================================
 
 import importlib.util
@@ -21,7 +22,7 @@ import torch
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODULE_PATH = os.path.join(REPO_ROOT, "projects", "3_transformer_scratch", "mini_transformer_gpt.py")
-OUTPUT_PATH = os.path.join(REPO_ROOT, "portfolio-website", "model_weights", "transformer_weights.json")
+OUTPUT_PATH = os.path.join(REPO_ROOT, "exported_weights", "transformer_weights.json")
 
 # Matches the module's own --demo configuration exactly (already a proven,
 # tested setup exercised by scripts/compare_text_generators.py) - keeps the
